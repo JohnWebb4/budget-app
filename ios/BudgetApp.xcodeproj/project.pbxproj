@@ -14,6 +14,7 @@
 		480B7BD95A0386E103B3FF25 /* libPods-BudgetApp-BudgetAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30058C6BA52DD394E0CBE4A3 /* libPods-BudgetApp-BudgetAppTests.a */; };
 		63B558CE994313AA029DBB2D /* libPods-BudgetApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CA73E3BCE348DE3B62A9B4CA /* libPods-BudgetApp.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		87A6871927A3B868009772A4 /* wmelon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87A6871827A3B868009772A4 /* wmelon.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +41,8 @@
 		604C99E1227A35C26353AFDF /* Pods-BudgetApp-BudgetAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BudgetApp-BudgetAppTests.debug.xcconfig"; path = "Target Support Files/Pods-BudgetApp-BudgetAppTests/Pods-BudgetApp-BudgetAppTests.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = BudgetApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		831F9DD3B5C8BBBAB082BA2B /* Pods-BudgetApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BudgetApp.release.xcconfig"; path = "Target Support Files/Pods-BudgetApp/Pods-BudgetApp.release.xcconfig"; sourceTree = "<group>"; };
+		87A6871727A3B867009772A4 /* BudgetApp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BudgetApp-Bridging-Header.h"; sourceTree = "<group>"; };
+		87A6871827A3B868009772A4 /* wmelon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = wmelon.swift; sourceTree = "<group>"; };
 		A613026D938636810BBE782A /* Pods-BudgetApp-BudgetAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BudgetApp-BudgetAppTests.release.xcconfig"; path = "Target Support Files/Pods-BudgetApp-BudgetAppTests/Pods-BudgetApp-BudgetAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		CA73E3BCE348DE3B62A9B4CA /* libPods-BudgetApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BudgetApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -114,7 +117,6 @@
 				604C99E1227A35C26353AFDF /* Pods-BudgetApp-BudgetAppTests.debug.xcconfig */,
 				A613026D938636810BBE782A /* Pods-BudgetApp-BudgetAppTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -128,12 +130,14 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				87A6871827A3B868009772A4 /* wmelon.swift */,
 				13B07FAE1A68108700A75B9A /* BudgetApp */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* BudgetAppTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				702DDAAA4833BD9648DEBEE8 /* Pods */,
+				87A6871727A3B867009772A4 /* BudgetApp-Bridging-Header.h */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -208,7 +212,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1250;
 					};
 				};
 			};
@@ -413,6 +417,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				87A6871927A3B868009772A4 /* wmelon.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -431,6 +436,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 604C99E1227A35C26353AFDF /* Pods-BudgetApp-BudgetAppTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -458,6 +464,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A613026D938636810BBE782A /* Pods-BudgetApp-BudgetAppTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = BudgetAppTests/Info.plist;
@@ -498,6 +505,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = BudgetApp;
+				SWIFT_OBJC_BRIDGING_HEADER = "BudgetApp-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -523,6 +531,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = BudgetApp;
+				SWIFT_OBJC_BRIDGING_HEADER = "BudgetApp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

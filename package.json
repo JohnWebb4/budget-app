@@ -5,16 +5,19 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
+    "pods": "pushd ios && pod install && popd",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint ."
   },
   "dependencies": {
+    "@nozbe/watermelondb": "^0.24.0",
     "react": "17.0.2",
     "react-native": "0.67.1"
   },
   "devDependencies": {
     "@babel/core": "^7.16.12",
+    "@babel/plugin-proposal-decorators": "^7.16.7",
     "@babel/runtime": "^7.16.7",
     "@react-native-community/eslint-config": "^3.0.1",
     "babel-jest": "^27.4.6",
