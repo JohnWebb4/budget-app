@@ -37,7 +37,7 @@ function AddTransactionPage({categories}) {
 
   return (
     <Page>
-      <Title>Enter:</Title>
+      <Title>Cost:</Title>
 
       <Input name="Title" value={title} onChangeText={setTitle} />
 

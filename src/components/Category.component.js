@@ -13,8 +13,7 @@ function Category({id, name, budget}) {
 
 const Container = styled(View)({
   backgroundColor: 'red',
-  flex: 1,
-  flexDirection: 'column',
+  flexDirection: 'row',
 });
 
 export {Category};

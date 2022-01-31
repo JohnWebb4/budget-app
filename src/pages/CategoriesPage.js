@@ -5,10 +5,11 @@ import withObservables from '@nozbe/with-observables';
 import {Button} from '../components/Button.component';
 import {Category} from '../components/Category.component';
 import {Page} from '../components/Page.component';
+import {MODALS} from '../constants/screen.constant';
 
-function CategoryPage({categories, navigation}) {
+function CategoriesPage({categories, navigation}) {
   function showAddCategory() {
-    navigation.push('AddCategory', {});
+    navigation.push(MODALS.ADD_CATEGORY, {});
   }
 
   return (
@@ -31,6 +32,6 @@ function enhance(Comp) {
   return CompWithDB;
 }
 
-const EnhancedCategoryPage = enhance(CategoryPage);
+const EnhancedCategoriesPage = enhance(CategoriesPage);
 
-export {EnhancedCategoryPage as CategoryPage};
+export {EnhancedCategoriesPage as CategoriesPage};
