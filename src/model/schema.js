@@ -14,7 +14,10 @@ export default appSchema({
     }),
     tableSchema({
       name: 'categories',
-      columns: [{name: 'name', type: 'string'}],
+      columns: [
+        {name: 'name', type: 'string'},
+        {name: 'budget', type: 'number'},
+      ],
     }),
   ],
 });

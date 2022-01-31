@@ -1,41 +1,56 @@
 import styled from '@emotion/native';
 import {Picker} from '@react-native-picker/picker';
 import React, {useState} from 'react';
-import {Text, TextInput} from 'react-native';
+import {Text} from 'react-native';
 import {withDatabase} from '@nozbe/watermelondb/DatabaseProvider';
 import withObservables from '@nozbe/with-observables';
 
 import {addTransaction} from '../actions/transaction.action';
 import {Button} from '../components/Button.component';
+import {Input} from '../components/Input.component';
 import {Page} from '../components/Page.component';
-import {colors} from '../design/color';
 import {spacing} from '../design/spacing';
 
-function AddPage({categories}) {
+function AddTransactionPage({categories}) {
   const [title, setTitle] = useState('');
   const [cost, setCost] = useState('');
-  const [category, setCategory] = useState('');
+  const [categoryId, setCategoryId] = useState('');
 
   async function onAddTransaction() {
-    await addTransaction({title, date: new Date(), cost: parseFloat(cost)});
+    const category = categories.find(({id}) => id === categoryId);
 
-    setTitle('');
-    setCost('');
+    try {
+      await addTransaction({
+        title,
+        category,
+        date: new Date(),
+        cost: parseFloat(cost),
+      });
+
+      setTitle('');
+      setCost('');
+      setCategoryId('');
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   return (
     <Page>
       <Title>Enter:</Title>
 
-      <Text>Title</Text>
-      <Input autoFocus value={title} onChangeText={setTitle} />
+      <Input name="Title" value={title} onChangeText={setTitle} />
 
-      <Picker selectedValue={category} onValueChange={setCategory}>
+      <Input
+        name="Cost"
+        value={cost}
+        onChangeText={setCost}
+        keyboardType="numeric"
+      />
+
+      <Picker selectedValue={categoryId} onValueChange={setCategoryId}>
         {categories.map(renderCategory)}
       </Picker>
-
-      <Text>Cost</Text>
-      <Input value={cost} onChangeText={setCost} keyboardType="numeric" />
 
       <Button title="Add" onPress={onAddTransaction}></Button>
     </Page>
@@ -43,18 +58,10 @@ function AddPage({categories}) {
 }
 
 function renderCategory(category) {
-  return <Picker.Item label={category.name} value={category.id} />;
+  return (
+    <Picker.Item key={category.id} label={category.name} value={category.id} />
+  );
 }
-
-const Input = styled(TextInput)({
-  borderColor: colors.blue,
-  borderRadius: spacing.s1,
-  borderWidth: spacing.s0,
-
-  marginTop: spacing.s1,
-  marginBottom: spacing.s3,
-  padding: spacing.s1,
-});
 
 const Title = styled(Text)({
   marginTop: spacing.s3,
@@ -74,6 +81,6 @@ function enhance(Comp) {
   return CompWithDB;
 }
 
-const EnhancedAddPage = enhance(AddPage);
+const EnhancedAddTransactionPage = enhance(AddTransactionPage);
 
-export {EnhancedAddPage as AddPage};
+export {EnhancedAddTransactionPage as AddTransactionPage};

@@ -10,5 +10,7 @@ export class Category extends Model {
 
   @field('name') name;
 
+  @field('budget') budget;
+
   @children('transactions') transactions;
 }
