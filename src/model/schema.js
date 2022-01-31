@@ -6,10 +6,15 @@ export default appSchema({
     tableSchema({
       name: 'transactions',
       columns: [
+        {name: 'category_id', type: 'string'},
         {name: 'title', type: 'string'},
-        {name: 'cost', type: 'string'},
+        {name: 'cost', type: 'number'},
         {name: 'date', type: 'number', isIndexed: true},
       ],
+    }),
+    tableSchema({
+      name: 'categories',
+      columns: [{name: 'name', type: 'string'}],
     }),
   ],
 });
