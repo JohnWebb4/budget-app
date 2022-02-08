@@ -16,6 +16,7 @@ function Button({onPress, title}) {
 const ButtonContainer = styled(Pressable)({
   backgroundColor: colors.lightBlue,
   borderRadius: spacing.s2,
+  padding: spacing.s2,
 });
 
 const ButtonTitle = styled(Text)({

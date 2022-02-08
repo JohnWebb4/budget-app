@@ -1,7 +1,5 @@
-import styled from '@emotion/native';
 import {Picker} from '@react-native-picker/picker';
 import React, {useState} from 'react';
-import {Text} from 'react-native';
 import {withDatabase} from '@nozbe/watermelondb/DatabaseProvider';
 import withObservables from '@nozbe/with-observables';
 
@@ -9,7 +7,7 @@ import {addTransaction} from '../actions/transaction.action';
 import {Button} from '../components/Button.component';
 import {Input} from '../components/Input.component';
 import {Page} from '../components/Page.component';
-import {spacing} from '../design/spacing';
+import {Typography} from '../components/Typography.component';
 
 function AddTransactionPage({categories}) {
   const [title, setTitle] = useState('');
@@ -37,7 +35,7 @@ function AddTransactionPage({categories}) {
 
   return (
     <Page>
-      <Title>Cost:</Title>
+      <Typography.Title>Cost:</Typography.Title>
 
       <Input name="Title" value={title} onChangeText={setTitle} />
 
@@ -63,15 +61,11 @@ function renderCategory(category) {
   );
 }
 
-const Title = styled(Text)({
-  marginTop: spacing.s3,
-  marginBottom: spacing.s4,
-  fontSize: spacing.s4,
-  textAlign: 'center',
-});
-
 const enhanceWithProps = withObservables(['database'], ({database}) => ({
-  categories: database.get('categories').query(),
+  categories: database
+    .get('categories')
+    .query()
+    .observeWithColumns(['name', 'budget']),
 }));
 
 function enhance(Comp) {

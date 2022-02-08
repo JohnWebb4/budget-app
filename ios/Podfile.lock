@@ -346,6 +346,8 @@ PODS:
   - RNScreens (3.10.2):
     - React-Core
     - React-RCTImage
+  - RNSVG (12.1.1):
+    - React
   - simdjson (1.0.0)
   - WatermelonDB (0.24.0):
     - React
@@ -412,6 +414,7 @@ DEPENDENCIES:
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - "simdjson (from `../node_modules/@nozbe/simdjson`)"
   - "WatermelonDB (from `../node_modules/@nozbe/watermelondb`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -500,6 +503,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   simdjson:
     :path: "../node_modules/@nozbe/simdjson"
   WatermelonDB:
@@ -554,6 +559,7 @@ SPEC CHECKSUMS:
   RNCPicker: cb57c823d5ce8d2d0b5dfb45ad97b737260dc59e
   RNGestureHandler: bf572f552ea324acd5b5464b8d30755b2d8c1de6
   RNScreens: d6da2b9e29cf523832c2542f47bf1287318b1868
+  RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   simdjson: c96317b3a50dff3468a42f586ab7ed22c6ab2fd9
   WatermelonDB: e043b1a32ddc63864eb539b562e86ef80f8224cd
   Yoga: 5cbf25add73edb290e1067017690f7ebf56c5468

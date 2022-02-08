@@ -5,8 +5,6 @@ import styled from '@emotion/native';
 import {spacing} from '../design/spacing';
 
 function Transaction({item}) {
-  console.log('transaction', item);
-
   return (
     <Container>
       <Text>{item.title}</Text>
