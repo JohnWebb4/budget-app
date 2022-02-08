@@ -39,7 +39,7 @@ function CategoriesPage({categories, navigation}) {
       isScrollView
       contentContainerStyle={{justifyContent: 'space-between'}}>
       <View>
-        <Typography.Title>HI</Typography.Title>
+        <Typography.Title>Categories</Typography.Title>
         {categories.map(renderCategory)}
       </View>
 

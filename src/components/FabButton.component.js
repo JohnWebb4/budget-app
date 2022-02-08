@@ -5,7 +5,7 @@ import {spacing} from '../design/spacing';
 
 const FabButton = styled(Button)({
   marginTop: spacing.s4,
-  bottom: '-5%',
+  bottom: '-20%',
 });
 
 export {FabButton};

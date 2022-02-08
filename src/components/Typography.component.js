@@ -4,7 +4,13 @@ import {Text} from 'react-native';
 import {spacing} from '../design/spacing';
 
 const Typography = {
-  Body1: styled(Text)({}),
+  Body2: styled(Text)({
+    fontSize: spacing.s3,
+  }),
+
+  Body1: styled(Text)({
+    fontSize: spacing.s4,
+  }),
 
   Heading1: styled(Text)({
     marginTop: spacing.s2,

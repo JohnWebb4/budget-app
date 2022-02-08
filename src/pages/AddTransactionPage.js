@@ -1,4 +1,5 @@
 import styled from '@emotion/native';
+import BottomSheet from '@gorhom/bottom-sheet';
 import {
   interpolateColor,
   useSharedValue,
@@ -6,8 +7,14 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 import {Picker} from '@react-native-picker/picker';
-import {Alert, KeyboardAvoidingView, Platform, TextInput} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  TextInput,
+  View,
+} from 'react-native';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Q} from '@nozbe/watermelondb';
 import {withDatabase} from '@nozbe/watermelondb/DatabaseProvider';
 import withObservables from '@nozbe/with-observables';
@@ -24,15 +31,32 @@ import {getCurrentMonth} from '../utils/time.util';
 import {colors} from '../design/color';
 import {spacing} from '../design/spacing';
 import {timing} from '../design/timing';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {Button} from '../components/Button.component';
 
 function AddTransactionPage({categories, transactions}) {
   const [title, setTitle] = useState('');
   const [cost, setCost] = useState(0);
   const [costText, setCostText] = useState('$0.00');
   const [categoryId, setCategoryId] = useState(categories[0]?.id);
-  const [categorySpending, setCategorySpending] = useState({});
-  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+  const [isCategoryBottomSheetVisible, setCategoryBottomSheetVisible] =
+    useState(false);
+
+  const categorySpending = useMemo(
+    () => getCategorySpending(categories, transactions),
+    [categories, transactions],
+  );
+  const selectedCategory = useMemo(() =>
+    categories.find(({id}) => id === categoryId, [categories, categoryId]),
+  );
+  const selectedCategoryLabel = useMemo(() => {
+    const remaining =
+      selectedCategory.budget - categorySpending[selectedCategory.id] - cost;
+
+    return `${selectedCategory.name}: $${Math.abs(remaining).toFixed(2)} ${
+      remaining > 0 ? 'Left' : 'Over'
+    }`;
+  }, [selectedCategory, categorySpending, cost]);
+  const snapPoints = useMemo(() => ['40%'], []);
 
   const bgColor = useSharedValue(1);
   const animatedContainerStyle = useAnimatedStyle(() => {
@@ -49,17 +73,12 @@ function AddTransactionPage({categories, transactions}) {
     const categorySpending = getCategorySpending(categories, transactions);
 
     updateBGColor(categoryId, categorySpending, cost);
-
-    setCategorySpending(categorySpending);
   }, [categories, transactions]);
 
   function onChangeCategory(categoryId) {
-    const selectedCategory = categories.find(({id}) => id === categoryId);
-
     updateBGColor(categoryId, categorySpending, cost);
 
     setCategoryId(categoryId);
-    setSelectedCategory(selectedCategory);
   }
 
   function updateBGColor(
@@ -134,6 +153,10 @@ function AddTransactionPage({categories, transactions}) {
     setCostText(`$${value.toFixed(2)}`);
   }
 
+  function toggleCategoryBottomSheet() {
+    setCategoryBottomSheetVisible(!isCategoryBottomSheetVisible);
+  }
+
   function renderCategory(category) {
     const remaining = category.budget - categorySpending[category.id];
 
@@ -150,16 +173,23 @@ function AddTransactionPage({categories, transactions}) {
 
   return (
     <Page style={animatedContainerStyle}>
-      <Typography.Title>Cost:</Typography.Title>
+      <Typography.Title>Add</Typography.Title>
 
-      <StyledAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <CostInput
-          value={costText}
-          onChangeText={onCostTextChange}
-          keyboardType="numeric"
-        />
-      </StyledAvoidingView>
+      <Typography.Heading1>Category</Typography.Heading1>
+
+      <CategoryContainer>
+        <Typography.Body1>{selectedCategoryLabel}</Typography.Body1>
+
+        <Button title="Select" onPress={toggleCategoryBottomSheet}></Button>
+      </CategoryContainer>
+
+      <Typography.Heading1>Cost</Typography.Heading1>
+
+      <CostInput
+        value={costText}
+        onChangeText={onCostTextChange}
+        keyboardType="numeric"
+      />
 
       <Slider
         minimumValue={0}
@@ -169,23 +199,37 @@ function AddTransactionPage({categories, transactions}) {
         onValueChange={onCostSliderChange}
       />
 
-      <Input
-        name="Title"
-        value={title}
-        onChangeText={setTitle}
-        style={{textAlign: 'center'}}
-      />
-
-      <Typography.Heading1>Category</Typography.Heading1>
-
-      <Picker selectedValue={categoryId} onValueChange={onChangeCategory}>
-        {categories.map(renderCategory)}
-      </Picker>
+      <StyledAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <Input
+          name="Message"
+          value={title}
+          onChangeText={setTitle}
+          style={{textAlign: 'center'}}
+        />
+      </StyledAvoidingView>
 
       <FabButton title="Add" onPress={onAddTransaction}></FabButton>
+
+      {isCategoryBottomSheetVisible ? (
+        <BottomSheet
+          enablePanDownToClose
+          snapPoints={snapPoints}
+          onClose={toggleCategoryBottomSheet}>
+          <Picker selectedValue={categoryId} onValueChange={onChangeCategory}>
+            {categories.map(renderCategory)}
+          </Picker>
+        </BottomSheet>
+      ) : null}
     </Page>
   );
 }
+
+const CategoryContainer = styled(View)({
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+});
 
 const StyledAvoidingView = styled(KeyboardAvoidingView)({
   marginBottom: spacing.s2,

@@ -51,7 +51,7 @@ const Button = styled(View)({
   justifyContent: 'center',
 });
 
-const ButtonText = styled(Typography.Body1)({
+const ButtonText = styled(Typography.Body2)({
   textAlign: 'center',
 });
 
