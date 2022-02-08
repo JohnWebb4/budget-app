@@ -6,6 +6,7 @@ import {AddTransactionPage} from '../pages/AddTransactionPage';
 import {CategoriesPage} from '../pages/CategoriesPage';
 import {HistoryPage} from '../pages/HistoryPage';
 import {SCREENS} from '../constants/screen.constant';
+import {colors} from '../design/color';
 
 const Tab = createBottomTabNavigator();
 const addActiveIcon = require('../images/add-active.png');
@@ -15,12 +16,18 @@ const categoryInactiveIcon = require('../images/category-inactive.png');
 const historyActiveIcon = require('../images/history-active.png');
 const historyInactiveIcon = require('../images/history-inactive.png');
 
+const commonTabOptions = {
+  tabBarActiveTintColor: colors.black,
+  tabBarInactiveTintColor: colors.grey,
+};
+
 const TabStack = () => (
   <Tab.Navigator>
     <Tab.Screen
       name={SCREENS.ADD_TRANSACTION}
       component={AddTransactionPage}
       options={{
+        ...commonTabOptions,
         tabBarIcon: AddIcon,
       }}
     />
@@ -28,6 +35,7 @@ const TabStack = () => (
       name={SCREENS.HISTORY}
       component={HistoryPage}
       options={{
+        ...commonTabOptions,
         tabBarIcon: HistoryIcon,
       }}
     />
@@ -35,6 +43,7 @@ const TabStack = () => (
       name={SCREENS.CATEGORIES}
       component={CategoriesPage}
       options={{
+        ...commonTabOptions,
         tabBarIcon: CategoryIcon,
       }}
     />
