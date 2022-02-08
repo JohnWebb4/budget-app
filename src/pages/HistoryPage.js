@@ -56,7 +56,7 @@ function HistoryPage({categories, transactions}) {
   }));
 
   return (
-    <Page>
+    <Page isScrollView>
       <Typography.Title>History</Typography.Title>
 
       <Typography.Heading1>Spending</Typography.Heading1>

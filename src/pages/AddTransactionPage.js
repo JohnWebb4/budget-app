@@ -5,19 +5,22 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 import {Picker} from '@react-native-picker/picker';
+import {Alert, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Q} from '@nozbe/watermelondb';
 import {withDatabase} from '@nozbe/watermelondb/DatabaseProvider';
 import withObservables from '@nozbe/with-observables';
+import Snackbar from 'react-native-snackbar';
 
 import {addTransaction} from '../actions/transaction.action';
-import {Button} from '../components/Button.component';
+import {FabButton} from '../components/FabButton.component';
 import {Input} from '../components/Input.component';
 import {Page} from '../components/Page.component';
 import {Typography} from '../components/Typography.component';
 import {getCategorySpending} from '../utils/category.util';
 import {getCurrentMonth} from '../utils/time.util';
 import {colors} from '../design/color';
+import {timing} from '../design/timing';
 
 function AddTransactionPage({categories, transactions}) {
   const [title, setTitle] = useState('');
@@ -30,8 +33,8 @@ function AddTransactionPage({categories, transactions}) {
     return {
       backgroundColor: interpolateColor(
         bgColor.value,
-        [-1, 0, 1],
-        [colors.lightRed, colors.white, colors.lightGreen],
+        [-1, 1],
+        [colors.lightRed, colors.lightGreen],
       ),
     };
   }, [bgColor.value]);
@@ -53,12 +56,15 @@ function AddTransactionPage({categories, transactions}) {
   function updateBGColor(categoryId, categorySpending) {
     const selectedCategory = categories.find(({id}) => id === categoryId);
 
-    if (selectedCategory && categorySpending[categoryId]) {
+    if (selectedCategory) {
       const selectedCategoryRemaining =
-        selectedCategory?.budget - categorySpending[categoryId];
+        selectedCategory?.budget - categorySpending[categoryId] ?? 0;
 
       bgColor.value = withTiming(
         selectedCategoryRemaining / selectedCategory.budget,
+        {
+          duration: timing.SLOW_MS,
+        },
       );
     }
   }
@@ -77,9 +83,18 @@ function AddTransactionPage({categories, transactions}) {
 
         setTitle('');
         setCost('');
+        Snackbar.show({
+          text: 'Successfully added Transaction',
+        });
       } catch (e) {
         console.error(e);
+
+        Snackbar.show({
+          text: 'Failed to add transaction',
+        });
       }
+    } else {
+      Alert.alert('Missing', 'Please fill in a title cost and category.');
     }
   }
 
@@ -98,7 +113,9 @@ function AddTransactionPage({categories, transactions}) {
   }
 
   return (
-    <Page style={animatedContainerStyle}>
+    <Page
+      style={animatedContainerStyle}
+      contentContainerStyle={{height: '100%'}}>
       <Typography.Title>Cost:</Typography.Title>
 
       <Input name="Title" value={title} onChangeText={setTitle} />
@@ -114,7 +131,7 @@ function AddTransactionPage({categories, transactions}) {
         {categories.map(renderCategory)}
       </Picker>
 
-      <Button title="Add" onPress={onAddTransaction}></Button>
+      <FabButton title="Add" onPress={onAddTransaction}></FabButton>
     </Page>
   );
 }

@@ -8,7 +8,6 @@ export default appSchema({
       columns: [
         {name: 'category_id', type: 'string'},
         {name: 'title', type: 'string'},
-        {name: 'color', type: 'string'},
         {name: 'cost', type: 'number'},
         {name: 'date', type: 'number', isIndexed: true},
       ],
@@ -18,6 +17,7 @@ export default appSchema({
       columns: [
         {name: 'name', type: 'string'},
         {name: 'budget', type: 'number'},
+        {name: 'color', type: 'string'},
       ],
     }),
   ],

@@ -3,8 +3,8 @@ import styled from '@emotion/native';
 import {withDatabase} from '@nozbe/watermelondb/DatabaseProvider';
 import withObservables from '@nozbe/with-observables';
 
-import {Button} from '../components/Button.component';
 import {CategoryItem} from '../components/CategoryItem.component';
+import {FabButton} from '../components/FabButton.component';
 import {Page} from '../components/Page.component';
 import {MODALS} from '../constants/screen.constant';
 import {spacing} from '../design/spacing';
@@ -34,12 +34,10 @@ function CategoriesPage({categories, navigation}) {
   }
 
   return (
-    <Page>
+    <Page contentContainerStyle={{height: '100%'}}>
       <Typography.Title>HI</Typography.Title>
-
       {categories.map(renderCategory)}
-
-      <Button title="Add category" onPress={showAddCategory}></Button>
+      <FabButton title="Add category" onPress={showAddCategory}></FabButton>
     </Page>
   );
 }

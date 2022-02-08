@@ -5,12 +5,12 @@ import {Text, TextInput} from 'react-native';
 import {colors} from '../design/color';
 import {spacing} from '../design/spacing';
 
-function Input({name, value, onChangeText, keyboardType}) {
+function Input({autoFocus, name, value, onChangeText, keyboardType}) {
   return (
     <>
       <Text>{name}</Text>
       <StyledInput
-        autoFocus
+        autoFocus={autoFocus}
         value={value}
         onChangeText={onChangeText}
         keyboardType={keyboardType}

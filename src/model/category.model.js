@@ -12,5 +12,7 @@ export class Category extends Model {
 
   @field('budget') budget;
 
+  @field('color') color;
+
   @children('transactions') transactions;
 }

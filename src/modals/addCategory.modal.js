@@ -33,7 +33,7 @@ function AddCategoryModal({navigation, category, route}) {
 
   return (
     <Page>
-      <Input name="Name" value={name} onChangeText={setName} />
+      <Input autoFocus name="Name" value={name} onChangeText={setName} />
       <Input
         name="Budget"
         value={budget}
