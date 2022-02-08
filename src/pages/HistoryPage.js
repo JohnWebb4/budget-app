@@ -11,6 +11,8 @@ import {Transaction} from '../components/Transaction.component';
 import {Typography} from '../components/Typography.component';
 import {colors} from '../design/color';
 import {spacing} from '../design/spacing';
+import {getCategorySpending} from '../utils/category.util';
+import {getCurrentMonth} from '../utils/time.util';
 
 const CHART_CONFIG = {
   backgroundColor: colors.white,
@@ -31,38 +33,26 @@ const CHART_CONFIG = {
 
 const CHART_COLORS = [colors.blue, colors.black, colors.red, colors.lightBlue];
 
-const CHART_HEIGHT = 225;
+const CHART_HEIGHT = 250;
 
 function HistoryPage({categories, transactions}) {
   const dimensions = useWindowDimensions();
   const chartWidth = dimensions.width - spacing.s4;
 
-  const summedTransactions = transactions.reduce((memo, transaction) => {
-    if (memo[transaction._raw['category_id']]) {
-      memo[transaction._raw['category_id']] += transaction?.cost;
-    } else {
-      memo[transaction._raw['category_id']] = transaction?.cost;
-    }
-
-    return memo;
-  }, {});
-
-  const categorySpending = categories.map(
-    category => summedTransactions[category?.id] ?? 0,
-  );
+  const categorySpending = getCategorySpending(categories, transactions);
 
   const spendingData = {
     labels: categories.map(category => category?.name),
     datasets: [
       {
-        data: categorySpending,
+        data: Object.values(categorySpending),
       },
     ],
   };
 
-  const breakdownData = categorySpending.map((spending, i) => ({
-    name: categories[i]?.name,
-    population: spending,
+  const breakdownData = categories.map((category, i) => ({
+    name: category.name,
+    population: categorySpending[category.id],
     color: CHART_COLORS[i],
     legendFontColor: colors.black,
     legendFontSize: spacing.s3,
@@ -94,7 +84,7 @@ function HistoryPage({categories, transactions}) {
         chartConfig={CHART_CONFIG}
         accessor={'population'}
         backgroundColor={'transparent'}
-        paddingLeft={chartWidth / 4 - spacing.s1}
+        paddingLeft={spacing.s2}
         center={[0, 0]}
         absolute
       />
@@ -109,6 +99,7 @@ function HistoryPage({categories, transactions}) {
 function renderTransaction(transaction) {
   return (
     <StyledTransaction
+      key={transaction?.id}
       id={transaction?.id}
       cost={transaction?.cost}
       date={transaction?.date}
@@ -122,11 +113,7 @@ const StyledTransaction = styled(Transaction)({
 });
 
 const enhanceWithProps = withObservables(['database'], ({database}) => {
-  const thisMonth = new Date();
-  thisMonth.setDate(1);
-  thisMonth.setHours(0);
-  thisMonth.setMilliseconds(0);
-  thisMonth.setSeconds(0);
+  const thisMonth = getCurrentMonth();
 
   return {
     categories: database

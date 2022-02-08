@@ -1,5 +1,6 @@
 import {Picker} from '@react-native-picker/picker';
 import React, {useState} from 'react';
+import {Q} from '@nozbe/watermelondb';
 import {withDatabase} from '@nozbe/watermelondb/DatabaseProvider';
 import withObservables from '@nozbe/with-observables';
 
@@ -8,11 +9,15 @@ import {Button} from '../components/Button.component';
 import {Input} from '../components/Input.component';
 import {Page} from '../components/Page.component';
 import {Typography} from '../components/Typography.component';
+import {getCategorySpending} from '../utils/category.util';
+import {getCurrentMonth} from '../utils/time.util';
 
-function AddTransactionPage({categories}) {
+function AddTransactionPage({categories, transactions}) {
   const [title, setTitle] = useState('');
   const [cost, setCost] = useState('');
   const [categoryId, setCategoryId] = useState('');
+
+  const categorySpending = getCategorySpending(categories, transactions);
 
   async function onAddTransaction() {
     const category = categories.find(({id}) => id === categoryId);
@@ -27,10 +32,19 @@ function AddTransactionPage({categories}) {
 
       setTitle('');
       setCost('');
-      setCategoryId('');
     } catch (e) {
       console.error(e);
     }
+  }
+
+  function renderCategory(category) {
+    return (
+      <Picker.Item
+        key={category.id}
+        label={`${category.name} - ${categorySpending[category.id]}`}
+        value={category.id}
+      />
+    );
   }
 
   return (
@@ -55,18 +69,19 @@ function AddTransactionPage({categories}) {
   );
 }
 
-function renderCategory(category) {
-  return (
-    <Picker.Item key={category.id} label={category.name} value={category.id} />
-  );
-}
+const enhanceWithProps = withObservables(['database'], ({database}) => {
+  const thisMonth = getCurrentMonth();
 
-const enhanceWithProps = withObservables(['database'], ({database}) => ({
-  categories: database
-    .get('categories')
-    .query()
-    .observeWithColumns(['name', 'budget']),
-}));
+  return {
+    categories: database
+      .get('categories')
+      .query()
+      .observeWithColumns(['name', 'budget']),
+    transactions: database
+      .get('transactions')
+      .query(Q.where('date', Q.gte(thisMonth.getTime()))),
+  };
+});
 
 function enhance(Comp) {
   const CompWithProps = enhanceWithProps(Comp);
