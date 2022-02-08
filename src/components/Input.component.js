@@ -23,6 +23,7 @@ function Input({autoFocus, name, value, onChangeText, keyboardType, style}) {
 
 const StyledInput = styled(TextInput)({
   fontSize: spacing.s4,
+  minHeight: spacing.s5,
   borderColor: colors.blue,
   borderRadius: spacing.s1,
   borderWidth: spacing.s0,

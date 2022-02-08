@@ -3,10 +3,11 @@ const colors = {
   blue: 'blue',
   lightBlue: 'aqua',
   red: 'red',
-  lightRed: '#c95f5f',
+  lightRed: '#c9825f',
   white: 'white',
-  greeen: 'green',
-  lightGreen: '#5bbd75',
+  greeen: '#5fc982',
+  lightGreen: '#5fc95f',
+  lightYellow: '#b7c95f',
 };
 
 export {colors};

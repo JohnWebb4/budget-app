@@ -6,7 +6,7 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 import {Picker} from '@react-native-picker/picker';
-import {Alert, TextInput} from 'react-native';
+import {Alert, KeyboardAvoidingView, Platform, TextInput} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Q} from '@nozbe/watermelondb';
 import {withDatabase} from '@nozbe/watermelondb/DatabaseProvider';
@@ -29,17 +29,18 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 function AddTransactionPage({categories, transactions}) {
   const [title, setTitle] = useState('');
   const [cost, setCost] = useState(0);
+  const [costText, setCostText] = useState('$0.00');
   const [categoryId, setCategoryId] = useState(categories[0]?.id);
   const [categorySpending, setCategorySpending] = useState({});
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
 
-  const bgColor = useSharedValue(0);
+  const bgColor = useSharedValue(1);
   const animatedContainerStyle = useAnimatedStyle(() => {
     return {
       backgroundColor: interpolateColor(
         bgColor.value,
-        [-1, 1],
-        [colors.lightRed, colors.lightGreen],
+        [0, 0.25, 0.5, 0.75],
+        [colors.lightRed, colors.lightYellow, colors.lightGreen, colors.greeen],
       ),
     };
   }, [bgColor.value]);
@@ -65,7 +66,7 @@ function AddTransactionPage({categories, transactions}) {
     categoryId,
     categorySpending,
     cost,
-    speed = timing.SLOW_MS,
+    speed = timing.VERY_SLOW_MS,
   ) {
     const selectedCategory = categories.find(({id}) => id === categoryId);
 
@@ -74,7 +75,13 @@ function AddTransactionPage({categories, transactions}) {
         selectedCategory?.budget - categorySpending[categoryId] ?? 0;
 
       bgColor.value = withTiming(
-        (selectedCategoryRemaining - cost) / selectedCategory.budget,
+        Math.max(
+          Math.min(
+            1,
+            (selectedCategoryRemaining - cost) / selectedCategory.budget,
+          ),
+          0,
+        ),
         {
           duration: speed,
         },
@@ -95,7 +102,7 @@ function AddTransactionPage({categories, transactions}) {
         });
 
         setTitle('');
-        setCost('');
+        setCost(0.0);
         Snackbar.show({
           text: 'Successfully added Transaction',
         });
@@ -112,17 +119,19 @@ function AddTransactionPage({categories, transactions}) {
   }
 
   function onCostTextChange(costString) {
-    const cost = costString.replace(/[^\d.]/g, '');
+    const cost = Number.parseFloat(costString.replace(/[^\d.]/g, ''));
 
-    updateBGColor(categoryId, categorySpending, cost, timing.FASTER_MS);
+    updateBGColor(categoryId, categorySpending, cost, timing.SLOW_SM);
 
-    setCost(Number.parseFloat(cost));
+    setCost(cost);
+    setCostText(costString);
   }
 
   function onCostSliderChange(value) {
     updateBGColor(categoryId, categorySpending, value, timing.FASTER_MS);
 
     setCost(value);
+    setCostText(`$${value.toFixed(2)}`);
   }
 
   function renderCategory(category) {
@@ -141,41 +150,46 @@ function AddTransactionPage({categories, transactions}) {
 
   return (
     <Page style={animatedContainerStyle}>
+      <Typography.Title>Cost:</Typography.Title>
+
+      <Input
+        name="Title"
+        value={title}
+        onChangeText={setTitle}
+        style={{textAlign: 'center'}}
+      />
+
+      <Typography.Heading1>Category</Typography.Heading1>
+
+      <Picker selectedValue={categoryId} onValueChange={onChangeCategory}>
+        {categories.map(renderCategory)}
+      </Picker>
+
       <SafeAreaView>
-        <Typography.Title>Cost:</Typography.Title>
-
-        <Input
-          name="Title"
-          value={title}
-          onChangeText={setTitle}
-          style={{textAlign: 'center'}}
-        />
-
-        <Typography.Heading1>Category</Typography.Heading1>
-
-        <Picker selectedValue={categoryId} onValueChange={onChangeCategory}>
-          {categories.map(renderCategory)}
-        </Picker>
-
-        <CostInput
-          value={`$${cost.toFixed(2)}`}
-          onChangeText={onCostTextChange}
-          keyboardType="numeric"
-        />
-
-        <Slider
-          minimumValue={0}
-          maximumValue={selectedCategory.budget}
-          minimumTrackTintColor={colors.green}
-          maximumTrackTintColor={'#00000022'}
-          onValueChange={onCostSliderChange}
-        />
+        <StyledAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <CostInput
+            value={costText}
+            onChangeText={onCostTextChange}
+            keyboardType="numeric"
+          />
+        </StyledAvoidingView>
       </SafeAreaView>
+
+      <Slider
+        minimumValue={0}
+        maximumValue={selectedCategory.budget}
+        minimumTrackTintColor={colors.green}
+        maximumTrackTintColor={'#00000022'}
+        onValueChange={onCostSliderChange}
+      />
 
       <FabButton title="Add" onPress={onAddTransaction}></FabButton>
     </Page>
   );
 }
+
+const StyledAvoidingView = styled(KeyboardAvoidingView)({});
 
 const CostInput = styled(TextInput)({
   marginTop: spacing.s4,
