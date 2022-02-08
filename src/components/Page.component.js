@@ -1,9 +1,9 @@
 import styled from '@emotion/native';
-import {SafeAreaView} from 'react-native';
+import {ScrollView} from 'react-native';
 
 import {spacing} from '../design/spacing';
 
-const Page = styled(SafeAreaView)({
+const Page = styled(ScrollView)({
   marginHorizontal: spacing.s3,
   marginVertical: spacing.s2,
 });

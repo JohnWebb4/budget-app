@@ -75,7 +75,7 @@ const CategoryContainer = styled(View)({
 const Container = styled(View)({
   borderWidth: 1,
   borderRadius: spacing.s2,
-  minHeight: 50,
+  height: spacing.s6,
   overflow: 'hidden',
 });
 

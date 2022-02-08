@@ -13,4 +13,14 @@ async function addTransaction({title, category, date, cost}) {
   });
 }
 
-export {addTransaction};
+async function deleteTransaction({id}) {
+  const transactionCollection = database.collections.get('transactions');
+
+  await database.write(async () => {
+    const transaction = await transactionCollection.find(id);
+
+    await transaction.markAsDeleted();
+  });
+}
+
+export {addTransaction, deleteTransaction};
