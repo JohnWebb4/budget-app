@@ -1,5 +1,11 @@
+import {
+  interpolateColor,
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+} from 'react-native-reanimated';
 import {Picker} from '@react-native-picker/picker';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Q} from '@nozbe/watermelondb';
 import {withDatabase} from '@nozbe/watermelondb/DatabaseProvider';
 import withObservables from '@nozbe/with-observables';
@@ -11,44 +17,88 @@ import {Page} from '../components/Page.component';
 import {Typography} from '../components/Typography.component';
 import {getCategorySpending} from '../utils/category.util';
 import {getCurrentMonth} from '../utils/time.util';
+import {colors} from '../design/color';
 
 function AddTransactionPage({categories, transactions}) {
   const [title, setTitle] = useState('');
   const [cost, setCost] = useState('');
-  const [categoryId, setCategoryId] = useState('');
+  const [categoryId, setCategoryId] = useState(categories[0]?.id);
+  const [categorySpending, setCategorySpending] = useState({});
 
-  const categorySpending = getCategorySpending(categories, transactions);
+  const bgColor = useSharedValue(0);
+  const animatedContainerStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor: interpolateColor(
+        bgColor.value,
+        [-1, 0, 1],
+        [colors.lightRed, colors.white, colors.lightGreen],
+      ),
+    };
+  }, [bgColor.value]);
+
+  useEffect(() => {
+    const categorySpending = getCategorySpending(categories, transactions);
+
+    updateBGColor(categoryId, categorySpending);
+
+    setCategorySpending(categorySpending);
+  }, [categories, transactions]);
+
+  function onChangeCategory(categoryId) {
+    updateBGColor(categoryId, categorySpending);
+
+    setCategoryId(categoryId);
+  }
+
+  function updateBGColor(categoryId, categorySpending) {
+    const selectedCategory = categories.find(({id}) => id === categoryId);
+
+    if (selectedCategory && categorySpending[categoryId]) {
+      const selectedCategoryRemaining =
+        selectedCategory?.budget - categorySpending[categoryId];
+
+      bgColor.value = withTiming(
+        selectedCategoryRemaining / selectedCategory.budget,
+      );
+    }
+  }
 
   async function onAddTransaction() {
-    const category = categories.find(({id}) => id === categoryId);
+    if (categoryId && title && cost) {
+      const category = categories.find(({id}) => id === categoryId);
 
-    try {
-      await addTransaction({
-        title,
-        category,
-        date: new Date(),
-        cost: parseFloat(cost),
-      });
+      try {
+        await addTransaction({
+          title,
+          category,
+          date: new Date(),
+          cost: parseFloat(cost),
+        });
 
-      setTitle('');
-      setCost('');
-    } catch (e) {
-      console.error(e);
+        setTitle('');
+        setCost('');
+      } catch (e) {
+        console.error(e);
+      }
     }
   }
 
   function renderCategory(category) {
+    const remaining = category.budget - categorySpending[category.id];
+
     return (
       <Picker.Item
         key={category.id}
-        label={`${category.name} - ${categorySpending[category.id]}`}
+        label={`${category.name}: $${Math.abs(remaining)} ${
+          remaining > 0 ? 'Left' : 'Over'
+        }`}
         value={category.id}
       />
     );
   }
 
   return (
-    <Page>
+    <Page style={animatedContainerStyle}>
       <Typography.Title>Cost:</Typography.Title>
 
       <Input name="Title" value={title} onChangeText={setTitle} />
@@ -60,7 +110,7 @@ function AddTransactionPage({categories, transactions}) {
         keyboardType="numeric"
       />
 
-      <Picker selectedValue={categoryId} onValueChange={setCategoryId}>
+      <Picker selectedValue={categoryId} onValueChange={onChangeCategory}>
         {categories.map(renderCategory)}
       </Picker>
 
