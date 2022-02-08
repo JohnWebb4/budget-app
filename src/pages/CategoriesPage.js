@@ -23,6 +23,7 @@ function CategoriesPage({categories, navigation}) {
   function renderCategory({id, name, budget}) {
     return (
       <Category
+        key={id}
         id={id}
         name={name}
         budget={budget}

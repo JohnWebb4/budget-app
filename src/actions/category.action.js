@@ -1,4 +1,5 @@
 import {database} from '../model/index';
+import {getRandomColor} from '../utils/color.util';
 
 async function addCategory({name, budget}) {
   const categoryCollection = database.collections.get('categories');
@@ -7,6 +8,7 @@ async function addCategory({name, budget}) {
     await categoryCollection.create(category => {
       category.name = name;
       category.budget = budget;
+      category.color = getRandomColor();
     });
   });
 }

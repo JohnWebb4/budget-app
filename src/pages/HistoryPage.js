@@ -15,7 +15,6 @@ import {getCategorySpending} from '../utils/category.util';
 import {getCurrentMonth} from '../utils/time.util';
 
 const CHART_CONFIG = {
-  backgroundColor: colors.white,
   backgroundGradientFrom: colors.white,
   backgroundGradientTo: colors.white,
   decimalPlaces: 2,
@@ -30,8 +29,6 @@ const CHART_CONFIG = {
     stroke: '#ffa726',
   },
 };
-
-const CHART_COLORS = [colors.blue, colors.black, colors.red, colors.lightBlue];
 
 const CHART_HEIGHT = 250;
 
@@ -53,7 +50,7 @@ function HistoryPage({categories, transactions}) {
   const breakdownData = categories.map((category, i) => ({
     name: category.name,
     population: categorySpending[category.id],
-    color: CHART_COLORS[i],
+    color: category.color,
     legendFontColor: colors.black,
     legendFontSize: spacing.s3,
   }));
