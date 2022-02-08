@@ -7,7 +7,7 @@ const FabButton = styled(Button)({
   position: 'absolute',
   left: '5%',
   right: '5%',
-  bottom: '5%',
+  bottom: '10%',
 });
 
 export {FabButton};
