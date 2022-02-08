@@ -152,6 +152,23 @@ function AddTransactionPage({categories, transactions}) {
     <Page style={animatedContainerStyle}>
       <Typography.Title>Cost:</Typography.Title>
 
+      <StyledAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <CostInput
+          value={costText}
+          onChangeText={onCostTextChange}
+          keyboardType="numeric"
+        />
+      </StyledAvoidingView>
+
+      <Slider
+        minimumValue={0}
+        maximumValue={selectedCategory.budget}
+        minimumTrackTintColor={colors.green}
+        maximumTrackTintColor={'#00000022'}
+        onValueChange={onCostSliderChange}
+      />
+
       <Input
         name="Title"
         value={title}
@@ -165,35 +182,17 @@ function AddTransactionPage({categories, transactions}) {
         {categories.map(renderCategory)}
       </Picker>
 
-      <SafeAreaView>
-        <StyledAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-          <CostInput
-            value={costText}
-            onChangeText={onCostTextChange}
-            keyboardType="numeric"
-          />
-        </StyledAvoidingView>
-      </SafeAreaView>
-
-      <Slider
-        minimumValue={0}
-        maximumValue={selectedCategory.budget}
-        minimumTrackTintColor={colors.green}
-        maximumTrackTintColor={'#00000022'}
-        onValueChange={onCostSliderChange}
-      />
-
       <FabButton title="Add" onPress={onAddTransaction}></FabButton>
     </Page>
   );
 }
 
-const StyledAvoidingView = styled(KeyboardAvoidingView)({});
+const StyledAvoidingView = styled(KeyboardAvoidingView)({
+  marginBottom: spacing.s2,
+});
 
 const CostInput = styled(TextInput)({
-  marginTop: spacing.s4,
-  fontSize: spacing.s5,
+  fontSize: spacing.s6,
   textAlign: 'center',
 });
 

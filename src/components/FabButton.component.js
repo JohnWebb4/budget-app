@@ -1,13 +1,11 @@
-import React from 'react';
 import styled from '@emotion/native';
 
 import {Button} from './Button.component';
+import {spacing} from '../design/spacing';
 
 const FabButton = styled(Button)({
-  position: 'absolute',
-  left: '5%',
-  right: '5%',
-  bottom: '10%',
+  marginTop: spacing.s4,
+  bottom: '-5%',
 });
 
 export {FabButton};
