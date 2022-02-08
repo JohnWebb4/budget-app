@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from '@emotion/native';
+import {View} from 'react-native';
 import {withDatabase} from '@nozbe/watermelondb/DatabaseProvider';
 import withObservables from '@nozbe/with-observables';
 
+import {Button} from '../components/Button.component';
 import {CategoryItem} from '../components/CategoryItem.component';
-import {FabButton} from '../components/FabButton.component';
 import {Page} from '../components/Page.component';
 import {MODALS} from '../constants/screen.constant';
 import {spacing} from '../design/spacing';
@@ -34,13 +35,22 @@ function CategoriesPage({categories, navigation}) {
   }
 
   return (
-    <Page contentContainerStyle={{height: '100%'}}>
-      <Typography.Title>HI</Typography.Title>
-      {categories.map(renderCategory)}
-      <FabButton title="Add category" onPress={showAddCategory}></FabButton>
+    <Page
+      isScrollView
+      contentContainerStyle={{justifyContent: 'space-between'}}>
+      <View>
+        <Typography.Title>HI</Typography.Title>
+        {categories.map(renderCategory)}
+      </View>
+
+      <AddButton title="Add category" onPress={showAddCategory}></AddButton>
     </Page>
   );
 }
+
+const AddButton = styled(Button)({
+  marginTop: spacing.s4,
+});
 
 const Category = styled(CategoryItem)({
   marginBottom: spacing.s2,

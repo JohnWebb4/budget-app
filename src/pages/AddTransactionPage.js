@@ -113,9 +113,7 @@ function AddTransactionPage({categories, transactions}) {
   }
 
   return (
-    <Page
-      style={animatedContainerStyle}
-      contentContainerStyle={{height: '100%'}}>
+    <Page style={animatedContainerStyle}>
       <Typography.Title>Cost:</Typography.Title>
 
       <Input name="Title" value={title} onChangeText={setTitle} />
