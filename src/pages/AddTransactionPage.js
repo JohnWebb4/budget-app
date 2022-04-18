@@ -49,6 +49,10 @@ function AddTransactionPage({categories, transactions}) {
     categories.find(({id}) => id === categoryId, [categories, categoryId]),
   );
   const selectedCategoryLabel = useMemo(() => {
+    if (!categoryId) {
+      return 'Please add a category';
+    }
+
     const remaining =
       selectedCategory.budget - categorySpending[selectedCategory.id] - cost;
 
@@ -192,8 +196,9 @@ function AddTransactionPage({categories, transactions}) {
       />
 
       <Slider
+        disabled={!selectedCategory}
         minimumValue={0}
-        maximumValue={selectedCategory.budget}
+        maximumValue={selectedCategory?.budget ?? 0}
         minimumTrackTintColor={colors.green}
         maximumTrackTintColor={'#00000022'}
         onValueChange={onCostSliderChange}
@@ -209,7 +214,10 @@ function AddTransactionPage({categories, transactions}) {
         />
       </StyledAvoidingView>
 
-      <FabButton title="Add" onPress={onAddTransaction}></FabButton>
+      <FabButton
+        title="Add"
+        onPress={onAddTransaction}
+        disabled={!selectedCategory}></FabButton>
 
       {isCategoryBottomSheetVisible ? (
         <BottomSheet

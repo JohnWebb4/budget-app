@@ -37,7 +37,10 @@ function CategoriesPage({categories, navigation}) {
   return (
     <Page
       isScrollView
-      contentContainerStyle={{justifyContent: 'space-between'}}>
+      contentContainerStyle={{
+        justifyContent: 'space-between',
+        minHeight: '10%',
+      }}>
       <View>
         <Typography.Title>Categories</Typography.Title>
         {categories.map(renderCategory)}

@@ -5,9 +5,9 @@ import {Pressable, Text} from 'react-native';
 import {colors} from '../design/color';
 import {spacing} from '../design/spacing';
 
-function Button({onPress, title, style}) {
+function Button({disabled, onPress, title, style}) {
   return (
-    <ButtonContainer onPress={onPress} style={style}>
+    <ButtonContainer disabled={disabled} onPress={onPress} style={style}>
       <ButtonTitle>{title}</ButtonTitle>
     </ButtonContainer>
   );
