@@ -10,16 +10,17 @@ import {Picker} from '@react-native-picker/picker';
 import {
   Alert,
   KeyboardAvoidingView,
+  Image,
   Platform,
+  Pressable,
   TextInput,
   View,
 } from 'react-native';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Q} from '@nozbe/watermelondb';
 import {withDatabase} from '@nozbe/watermelondb/DatabaseProvider';
 import withObservables from '@nozbe/with-observables';
 import Snackbar from 'react-native-snackbar';
-import Slider from '@react-native-community/slider';
 
 import {addTransaction} from '../actions/transaction.action';
 import {FabButton} from '../components/FabButton.component';
@@ -32,6 +33,9 @@ import {colors} from '../design/color';
 import {spacing} from '../design/spacing';
 import {timing} from '../design/timing';
 import {Button} from '../components/Button.component';
+
+const arrowDownImage = require('../images/arrow-down.png');
+const arrowUpImage = require('../images/arrow-up.png');
 
 function AddTransactionPage({categories, transactions}) {
   const [title, setTitle] = useState('');
@@ -68,7 +72,17 @@ function AddTransactionPage({categories, transactions}) {
       backgroundColor: interpolateColor(
         bgColor.value,
         [0, 0.25, 0.5, 0.75],
-        [colors.lightRed, colors.lightYellow, colors.lightGreen, colors.greeen],
+        [colors.lightRed, colors.lightYellow, colors.lightGreen, colors.green],
+      ),
+    };
+  }, [bgColor.value]);
+  const animatedButtonStyle = useAnimatedStyle(() => {
+    return {
+      color: 'red',
+      backgroundColor: interpolateColor(
+        bgColor.value,
+        [0, 0.25, 0.5, 0.75],
+        [colors.red, colors.yellow, colors.green, colors.darkGreen],
       ),
     };
   }, [bgColor.value]);
@@ -150,15 +164,26 @@ function AddTransactionPage({categories, transactions}) {
     setCostText(costString);
   }
 
-  function onCostSliderChange(value) {
+  function toggleCategoryBottomSheet() {
+    setCategoryBottomSheetVisible(!isCategoryBottomSheetVisible);
+  }
+
+  function incrementMoney() {
+    const value = cost + 5;
+
     updateBGColor(categoryId, categorySpending, value, timing.FASTER_MS);
 
     setCost(value);
     setCostText(`$${value.toFixed(2)}`);
   }
 
-  function toggleCategoryBottomSheet() {
-    setCategoryBottomSheetVisible(!isCategoryBottomSheetVisible);
+  function decrementMoney() {
+    const value = Math.max(0, cost - 5);
+
+    updateBGColor(categoryId, categorySpending, value, timing.FASTER_MS);
+
+    setCost(value);
+    setCostText(`$${value.toFixed(2)}`);
   }
 
   function renderCategory(category) {
@@ -184,25 +209,11 @@ function AddTransactionPage({categories, transactions}) {
       <CategoryContainer>
         <Typography.Body1>{selectedCategoryLabel}</Typography.Body1>
 
-        <Button title="Select" onPress={toggleCategoryBottomSheet}></Button>
+        <Button
+          title="Select"
+          onPress={toggleCategoryBottomSheet}
+          style={animatedButtonStyle}></Button>
       </CategoryContainer>
-
-      <Typography.Heading1>Cost</Typography.Heading1>
-
-      <CostInput
-        value={costText}
-        onChangeText={onCostTextChange}
-        keyboardType="numeric"
-      />
-
-      <Slider
-        disabled={!selectedCategory}
-        minimumValue={0}
-        maximumValue={selectedCategory?.budget ?? 0}
-        minimumTrackTintColor={colors.green}
-        maximumTrackTintColor={'#00000022'}
-        onValueChange={onCostSliderChange}
-      />
 
       <StyledAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -214,10 +225,24 @@ function AddTransactionPage({categories, transactions}) {
         />
       </StyledAvoidingView>
 
+      <Typography.Heading1>Cost</Typography.Heading1>
+
+      <StyledIncrementButton onPress={incrementMoney} source={arrowUpImage} />
+
+      <CostInput
+        value={costText}
+        onChangeText={onCostTextChange}
+        keyboardType="numeric"
+      />
+
+      <StyledIncrementButton onPress={decrementMoney} source={arrowDownImage} />
+
       <FabButton
         title="Add"
         onPress={onAddTransaction}
-        disabled={!selectedCategory}></FabButton>
+        style={animatedButtonStyle}
+        disabled={!selectedCategory}
+      />
 
       {isCategoryBottomSheetVisible ? (
         <BottomSheet
@@ -233,10 +258,27 @@ function AddTransactionPage({categories, transactions}) {
   );
 }
 
+function IncrementButton({onPress, source, style}) {
+  const handleOnPress = useCallback(onPress, [onPress]);
+
+  return (
+    <Pressable onPress={handleOnPress}>
+      <Image source={source} style={style} />
+    </Pressable>
+  );
+}
+
 const CategoryContainer = styled(View)({
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'space-between',
+});
+
+const StyledIncrementButton = styled(IncrementButton)({
+  alignSelf: 'center',
+  height: 100,
+  width: '30%',
+  resizeMode: 'contain',
 });
 
 const StyledAvoidingView = styled(KeyboardAvoidingView)({

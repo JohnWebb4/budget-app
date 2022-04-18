@@ -1,4 +1,5 @@
 import styled from '@emotion/native';
+import Animated from 'react-native-reanimated';
 
 import React from 'react';
 import {Pressable, Text} from 'react-native';
@@ -7,13 +8,15 @@ import {spacing} from '../design/spacing';
 
 function Button({disabled, onPress, title, style}) {
   return (
-    <ButtonContainer disabled={disabled} onPress={onPress} style={style}>
-      <ButtonTitle>{title}</ButtonTitle>
-    </ButtonContainer>
+    <Pressable disabled={disabled} onPress={onPress}>
+      <ButtonContainer style={style}>
+        <ButtonTitle>{title}</ButtonTitle>
+      </ButtonContainer>
+    </Pressable>
   );
 }
 
-const ButtonContainer = styled(Pressable)({
+const ButtonContainer = styled(Animated.View)({
   backgroundColor: colors.lightBlue,
   borderRadius: spacing.s2,
   padding: spacing.s2,
